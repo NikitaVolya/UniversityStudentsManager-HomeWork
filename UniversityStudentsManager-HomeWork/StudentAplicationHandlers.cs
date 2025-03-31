@@ -5,7 +5,7 @@ using UniversityStudentsMenager.DAL.Repositories;
 namespace UniversityStudentsManager
 {
 
-    internal class AplicationHandlers
+    internal class StudentAplicationHandlers
     {
         public static void PauseConsole()
         {

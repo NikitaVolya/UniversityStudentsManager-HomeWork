@@ -1,22 +1,21 @@
 ﻿
-using UniversityStudentsManager;
-using UniversityStudentsMenager.DAL.Repositories;
+using UniversityStudentsMenager.DAL;
 
 namespace UniversityStudentsMenager.ConsoleApp
 {
     internal class MainMenu
     {
-        private StudentRepository _repository;
+        private UserServise _servise;
         private List<string> _captions;
-        private List<Action<StudentRepository>> _handlers;
+        private List<Action<UserServise>> _handlers;
         private bool _cycle;
 
         public MainMenu()
         {
-            _repository = new StudentRepository();
+            _servise = new UserServise();
 
             _captions = new List<string>();
-            _handlers = new List<Action<StudentRepository>>();
+            _handlers = new List<Action<UserServise>>();
         }
 
         private void ClearMenuOptions()
@@ -25,7 +24,7 @@ namespace UniversityStudentsMenager.ConsoleApp
             _handlers.Clear();
         }
 
-        private void AddMenuOption(string text, Action<StudentRepository> handler)
+        private void AddMenuOption(string text, Action<UserServise> handler)
         {
             _captions.Add(text);
             _handlers.Add(handler);
@@ -34,11 +33,15 @@ namespace UniversityStudentsMenager.ConsoleApp
         private void MenuInit()
         {
             ClearMenuOptions();
-            AddMenuOption("Add new student", AplicationHandlers.AddNewStudent);
-            AddMenuOption("Show all students", AplicationHandlers.ShowAllStudents);
-            AddMenuOption("Modify student", AplicationHandlers.ModifyStudent);
-            AddMenuOption("Delete student", AplicationHandlers.DeleteStudent);
-            AddMenuOption("Show student info by id", AplicationHandlers.ShowInfo);
+
+            AddMenuOption("Add new user", x => UserAplicationHandlers.AddNewUser(_servise));
+            AddMenuOption("Add new order", x => UserAplicationHandlers.AddNewOrder(_servise));
+            AddMenuOption("Remove user", x => UserAplicationHandlers.RemoveUser(_servise));
+            AddMenuOption("Remove order", x => UserAplicationHandlers.RemoveOrder(_servise));
+            AddMenuOption("Update user", x => UserAplicationHandlers.UpdateUser(_servise));
+            AddMenuOption("Update order", x => UserAplicationHandlers.UpdateOrder(_servise));
+            AddMenuOption("Show all users", x => UserAplicationHandlers.ShowAllUsers(_servise));
+            AddMenuOption("Show all orders", x => UserAplicationHandlers.ShowAllOrders(_servise));
             AddMenuOption("Exit", x => Stop());
         }
 
@@ -53,7 +56,7 @@ namespace UniversityStudentsMenager.ConsoleApp
             if (index < 0 || index >= _handlers.Count)
                 return;
 
-            _handlers[index](_repository);
+            _handlers[index](_servise);
         }
 
         private void MainLoop()
